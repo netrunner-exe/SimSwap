@@ -127,5 +127,10 @@ def swap_result_new_model(face_align_crop, model, latend_id):
     swap_res = swap_res.squeeze(0).transpose((1, 2, 0))
 
     swap_result = np.clip(255 * swap_res, 0, 255)
+    
+    test = Image.fromarray(np.uint8(swap_result))
+    test.save("/content/simswap_img_result/face_JPG.jpg")
+    test.save("/content/simswap_img_result/face_PNG.png")
+    
     swap_result = img2tensor(swap_result / 255., bgr2rgb=False, float32=True)
     return swap_result
