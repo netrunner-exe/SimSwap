@@ -33,6 +33,6 @@ class TestOptions(BaseOptions):
         self.parser.add_argument('--id_thres', type=float, default=0.03, help='how many test images to run')
         self.parser.add_argument('--no_simswaplogo', action='store_true', help='Remove the watermark')
         self.parser.add_argument('--use_mask', action='store_true', help='Use mask for better result')
-        self.parser.add_argument('--crop_size', type=int, default=224, help='Crop of size of input image')
-        
+        self.parser.add_argument('--new_model', type=str2bool, default=False, const=False, nargs='?', help='Use new pretrained model')
+        self.parser.add_argument('--Gdeep', type=str2bool, default=False)
         self.isTrain = False
