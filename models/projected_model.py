@@ -51,7 +51,8 @@ class fsModel(BaseModel):
         self.netArc.eval()
         self.netArc.requires_grad_(False)
         if not self.isTrain:
-            pretrained_path =  opt.checkpoints_dir
+            # pretrained_path =  opt.checkpoints_dir
+            pretrained_path = '' if not self.isTrain else opt.load_pretrain
             self.load_network(self.netG, 'G', opt.which_epoch, pretrained_path)
             return
         self.netD = ProjectedDiscriminator(diffaug=False, interp224=False, **{})
