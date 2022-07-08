@@ -48,7 +48,7 @@ if __name__ == '__main__':
     torch.nn.Module.dump_patches = True
     if crop_size == 512:
       if opt.new_model == True:
-          opt.name = 'simswap_512_test'
+          opt.name = '512_new'
           opt.Gdeep = True
           mode = 'None'
       else:
