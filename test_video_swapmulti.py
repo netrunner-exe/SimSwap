@@ -15,6 +15,7 @@ from PIL import Image
 import torch.nn.functional as F
 from torchvision import transforms
 from models.models import create_model
+from models.projected_model import fsModel
 from options.test_options import TestOptions
 from insightface_func.face_detect_crop_multi import Face_detect_crop
 from util.videoswap import video_swap
@@ -70,7 +71,7 @@ if __name__ == '__main__':
         model.eval()
 
     app = Face_detect_crop(name='antelope', root='./insightface_func/models')
-    app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode = mode)
+    app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640), mode=mode)
 
     with torch.no_grad():
         pic_a = opt.pic_a_path
@@ -97,6 +98,6 @@ if __name__ == '__main__':
         latend_id = model.netArc(img_id_downsample)
         latend_id = F.normalize(latend_id, p=2, dim=1)
 
-        video_swap(opt.video_path, latend_id, model, app, opt.output_path,temp_results_dir=opt.temp_path,\
-            no_simswaplogo=opt.no_simswaplogo,use_mask=opt.use_mask,crop_size=crop_size)
+        video_swap(opt.video_path, latend_id, model, app, opt.output_path, temp_results_dir=opt.temp_path,
+                   no_simswaplogo=opt.no_simswaplogo, use_mask=opt.use_mask, crop_size=crop_size, new_model=opt.new_model)
 
