@@ -15,12 +15,14 @@ from PIL import Image
 import torch.nn.functional as F
 from torchvision import transforms
 from models.models import create_model
+from models.projected_model import fsModel
 from options.test_options import TestOptions
 from insightface_func.face_detect_crop_multi import Face_detect_crop
 from util.reverse2original import reverse2wholeimage
 import os
 from util.add_watermark import watermark_image
 from util.norm import SpecificNorm
+from util.swap_new_model import swap_result_new_model
 from parsing_model.model import BiSeNet
 
 def lcm(a, b): return abs(a * b) / fractions.gcd(a, b) if a and b else 0
@@ -58,9 +60,15 @@ if __name__ == '__main__':
       if opt.name == 'people':
           opt.new_model = False
 
+    if opt.new_model == True:
+        model = fsModel()
+        model.initialize(opt)
+        model.netG.eval()
+    else:            
+        model = create_model(opt)
+        model.eval()
+                
     logoclass = watermark_image('./simswaplogo/simswaplogo.png')
-    model = create_model(opt)
-    model.eval()
     spNorm =SpecificNorm()
 
     app = Face_detect_crop(name='antelope', root='./insightface_func/models')
@@ -98,7 +106,11 @@ if __name__ == '__main__':
 
             b_align_crop_tenor = _totensor(cv2.cvtColor(b_align_crop,cv2.COLOR_BGR2RGB))[None,...].cuda()
 
-            swap_result = model(None, b_align_crop_tenor, latend_id, None, True)[0]
+            if opt.new_model == True:
+              swap_result = swap_result_new_model(b_align_crop_tenor, latend_id, model)
+            else:
+              swap_result = model(None, b_align_crop_tenor, latend_id, None, True)[0]
+
             swap_result_list.append(swap_result)
             b_align_crop_tenor_list.append(b_align_crop_tenor)
 
