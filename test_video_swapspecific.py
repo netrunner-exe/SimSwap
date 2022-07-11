@@ -61,6 +61,14 @@ if __name__ == '__main__':
       if opt.name == 'people':
           opt.new_model = False
 
+    if opt.new_model == True:
+        model = fsModel()
+        model.initialize(opt)
+        model.netG.eval()
+    else:            
+        model = create_model(opt)
+        model.eval()
+
     app = Face_detect_crop(name='antelope', root='./insightface_func/models')
     app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode=mode)
     with torch.no_grad():
