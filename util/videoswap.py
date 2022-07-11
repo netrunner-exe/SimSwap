@@ -20,6 +20,7 @@ from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 import  time
 from util.add_watermark import watermark_image
 from util.norm import SpecificNorm
+from util.swap_new_model import swap_result_new_model
 from parsing_model.model import BiSeNet
 
 def _totensor(array):
@@ -27,7 +28,9 @@ def _totensor(array):
     img = tensor.transpose(0, 1).transpose(0, 2).contiguous()
     return img.float().div(255)
 
-def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_results_dir='./temp_results', crop_size=224, no_simswaplogo = False,use_mask =False):
+def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_results_dir='./temp_results',
+               crop_size=224, no_simswaplogo=False, use_mask=False, new_model=False):
+
     video_forcheck = VideoFileClip(video_path)
     if video_forcheck.audio is None:
         no_audio = True
@@ -75,23 +78,28 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
                 # print(frame_index)
                 if not os.path.exists(temp_results_dir):
                         os.mkdir(temp_results_dir)
+
                 frame_align_crop_list = detect_results[0]
                 frame_mat_list = detect_results[1]
                 swap_result_list = []
                 frame_align_crop_tenor_list = []
-                for frame_align_crop in frame_align_crop_list:
 
+                for frame_align_crop in frame_align_crop_list:
                     # BGR TO RGB
                     # frame_align_crop_RGB = frame_align_crop[...,::-1]
 
                     frame_align_crop_tenor = _totensor(cv2.cvtColor(frame_align_crop,cv2.COLOR_BGR2RGB))[None,...].cuda()
+
+                    if new_model == True:
+                        swap_result = swap_result_new_model(frame_align_crop_tenor, id_vetor, swap_model)
+                    else:
+                        swap_result = swap_model(None, frame_align_crop_tenor, id_vetor, None, True)[0]
 
                     swap_result = swap_model(None, frame_align_crop_tenor, id_vetor, None, True)[0]
                     cv2.imwrite(os.path.join(temp_results_dir, 'frame_{:0>7d}.jpg'.format(frame_index)), frame)
                     swap_result_list.append(swap_result)
                     frame_align_crop_tenor_list.append(frame_align_crop_tenor)
 
-                    
 
                 reverse2wholeimage(frame_align_crop_tenor_list,swap_result_list, frame_mat_list, crop_size, frame, logoclass,\
                     os.path.join(temp_results_dir, 'frame_{:0>7d}.jpg'.format(frame_index)),no_simswaplogo,pasring_model =net,use_mask=use_mask, norm = spNorm)
@@ -117,6 +125,4 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
     if not no_audio:
         clips = clips.set_audio(video_audio_clip)
 
-
     clips.write_videofile(save_path,audio_codec='aac')
-
