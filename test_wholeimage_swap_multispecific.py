@@ -51,13 +51,21 @@ if __name__ == '__main__':
     multisepcific_dir = opt.multisepcific_dir
 
     torch.nn.Module.dump_patches = True
-
     if crop_size == 512:
+      if opt.new_model == True:
+          opt.name = '512_new'
+          opt.Gdeep = True
+          mode = 'None'
+      else:
+        opt.name = str(512)
         opt.which_epoch = 550000
-        opt.name = '512'
         mode = 'ffhq'
     else:
         mode = 'None'
+
+    if crop_size == 224:
+      if opt.name == 'people':
+          opt.new_model = False
 
     logoclass = watermark_image('./simswaplogo/simswaplogo.png')
     model = create_model(opt)
@@ -146,7 +154,11 @@ if __name__ == '__main__':
 
         for tmp_index, min_index in enumerate(min_indexs):
             if min_value[tmp_index] < opt.id_thres:
-                swap_result = model(None, b_align_crop_tenor_list[tmp_index], target_id_norm_list[min_index], None, True)[0]
+                if opt.new_model == True:
+                  swap_result = swap_result_new_model(b_align_crop_tenor_list[tmp_index], model, target_id_norm_list[min_index])
+                else:
+                  swap_result = model(None, b_align_crop_tenor_list[tmp_index], target_id_norm_list[min_index], None, True)[0]
+
                 swap_result_list.append(swap_result)
                 swap_result_matrix_list.append(b_mat_list[tmp_index])
                 swap_result_ori_pic_list.append(b_align_crop_tenor_list[tmp_index])
