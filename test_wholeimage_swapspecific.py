@@ -22,6 +22,7 @@ import os
 from util.add_watermark import watermark_image
 import torch.nn as nn
 from util.norm import SpecificNorm
+from util.swap_new_model import swap_result_new_model
 from parsing_model.model import BiSeNet
 
 def lcm(a, b): return abs(a * b) / fractions.gcd(a, b) if a and b else 0
@@ -63,15 +64,19 @@ if __name__ == '__main__':
     if crop_size == 224:
       if opt.name == 'people':
           opt.new_model = False
-
+                
+    if opt.new_model == True:
+        model = fsModel()
+        model.initialize(opt)
+        model.netG.eval()
+    else:            
+        model = create_model(opt)
+        model.eval()
+                
     logoclass = watermark_image('./simswaplogo/simswaplogo.png')
-    model = create_model(opt)
-    model.eval()
+
     mse = torch.nn.MSELoss().cuda()
-
     spNorm =SpecificNorm()
-
-
     app = Face_detect_crop(name='antelope', root='./insightface_func/models')
     app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode=mode)
 
