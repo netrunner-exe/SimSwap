@@ -43,11 +43,21 @@ if __name__ == '__main__':
 
     torch.nn.Module.dump_patches = True
     if crop_size == 512:
+      if opt.new_model == True:
+          opt.name = '512_new'
+          opt.Gdeep = True
+          mode = 'None'
+      else:
+        opt.name = str(512)
         opt.which_epoch = 550000
-        opt.name = '512'
         mode = 'ffhq'
     else:
         mode = 'None'
+
+    if crop_size == 224:
+      if opt.name == 'people':
+          opt.new_model = False
+
     logoclass = watermark_image('./simswaplogo/simswaplogo.png')
     model = create_model(opt)
     model.eval()
