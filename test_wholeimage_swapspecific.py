@@ -153,7 +153,7 @@ if __name__ == '__main__':
 
     if min_value < opt.id_thres:
         if opt.new_model == True:
-            swap_result = swap_result_new_model(b_align_crop_tenor_list[min_index], model, latend_id)
+            swap_result = swap_result_new_model(b_align_crop_tenor_list[min_index], latend_id, model)
         else:
             swap_result = model(None, b_align_crop_tenor_list[min_index], latend_id, None, True)[0]
 
