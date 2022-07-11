@@ -15,6 +15,7 @@ from PIL import Image
 import torch.nn.functional as F
 from torchvision import transforms
 from models.models import create_model
+from models.projected_model import fsModel
 from options.test_options import TestOptions
 from insightface_func.face_detect_crop_multi import Face_detect_crop
 from util.reverse2original import reverse2wholeimage
