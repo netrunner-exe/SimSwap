@@ -15,6 +15,7 @@ from PIL import Image
 import torch.nn.functional as F
 from torchvision import transforms
 from models.models import create_model
+from models.projected_model import fsModel
 from options.test_options import TestOptions
 from insightface_func.face_detect_crop_multi import Face_detect_crop
 from util.reverse2original import reverse2wholeimage
@@ -67,13 +68,17 @@ if __name__ == '__main__':
       if opt.name == 'people':
           opt.new_model = False
 
+    if opt.new_model == True:
+        model = fsModel()
+        model.initialize(opt)
+        model.netG.eval()
+    else:            
+        model = create_model(opt)
+        model.eval()
+                
     logoclass = watermark_image('./simswaplogo/simswaplogo.png')
-    model = create_model(opt)
-    model.eval()
     mse = torch.nn.MSELoss().cuda()
-
     spNorm =SpecificNorm()
-
 
     app = Face_detect_crop(name='antelope', root='./insightface_func/models')
     app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode = mode)
