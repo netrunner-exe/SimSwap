@@ -136,8 +136,10 @@ if __name__ == '__main__':
         net =None
 
     if min_value < opt.id_thres:
-
-        swap_result = model(None, b_align_crop_tenor_list[min_index], latend_id, None, True)[0]
+        if opt.new_model == True:
+            swap_result = swap_result_new_model(b_align_crop_tenor_list[min_index], model, latend_id)
+        else:
+            swap_result = model(None, b_align_crop_tenor_list[min_index], latend_id, None, True)[0]
 
         reverse2wholeimage([b_align_crop_tenor_list[min_index]], [swap_result], [b_mat_list[min_index]], crop_size, img_b_whole, logoclass, \
             os.path.join(opt.output_path, 'result_whole_swapspecific.jpg'), opt.no_simswaplogo,pasring_model =net,use_mask=opt.use_mask, norm = spNorm)
