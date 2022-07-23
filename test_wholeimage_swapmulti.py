@@ -107,7 +107,7 @@ if __name__ == '__main__':
             b_align_crop_tenor = _totensor(cv2.cvtColor(b_align_crop,cv2.COLOR_BGR2RGB))[None,...].cuda()
 
             if opt.new_model == True:
-              swap_result = swap_result_new_model(b_align_crop_tenor, latend_id, model)
+              swap_result = swap_result_new_model(b_align_crop_tenor, model, latend_id)
             else:
               swap_result = model(None, b_align_crop_tenor, latend_id, None, True)[0]
 
