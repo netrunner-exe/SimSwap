@@ -93,7 +93,7 @@ def video_swap(video_path, id_vetor, specific_person_id_nonorm,id_thres, swap_mo
 
                 if min_value < id_thres:
                     if new_model == True:
-                      swap_result = swap_result_new_model(frame_align_crop_tenor_list[min_index], id_vetor, swap_model)
+                      swap_result = swap_result_new_model(frame_align_crop_tenor_list[min_index], swap_model, id_vetor)
                     else:
                       swap_result = swap_model(None, frame_align_crop_tenor_list[min_index], id_vetor, None, True)[0]
                 
