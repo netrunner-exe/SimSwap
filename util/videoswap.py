@@ -91,7 +91,7 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
                     frame_align_crop_tenor = _totensor(cv2.cvtColor(frame_align_crop,cv2.COLOR_BGR2RGB))[None,...].cuda()
 
                     if new_model == True:
-                        swap_result = swap_result_new_model(frame_align_crop_tenor, id_vetor, swap_model)
+                        swap_result = swap_result_new_model(frame_align_crop_tenor, swap_model, id_vetor)
                     else:
                         swap_result = swap_model(None, frame_align_crop_tenor, id_vetor, None, True)[0]
 
