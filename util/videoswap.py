@@ -95,7 +95,6 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
                     else:
                         swap_result = swap_model(None, frame_align_crop_tenor, id_vetor, None, True)[0]
 
-                    swap_result = swap_model(None, frame_align_crop_tenor, id_vetor, None, True)[0]
                     cv2.imwrite(os.path.join(temp_results_dir, 'frame_{:0>7d}.jpg'.format(frame_index)), frame)
                     swap_result_list.append(swap_result)
                     frame_align_crop_tenor_list.append(frame_align_crop_tenor)
