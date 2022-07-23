@@ -160,7 +160,7 @@ if __name__ == '__main__':
         for tmp_index, min_index in enumerate(min_indexs):
             if min_value[tmp_index] < opt.id_thres:
                 if opt.new_model == True:
-                  swap_result = swap_result_new_model(b_align_crop_tenor_list[tmp_index], target_id_norm_list[min_index], model)
+                  swap_result = swap_result_new_model(b_align_crop_tenor_list[tmp_index], model, target_id_norm_list[min_index])
                 else:
                   swap_result = model(None, b_align_crop_tenor_list[tmp_index], target_id_norm_list[min_index], None, True)[0]
 
