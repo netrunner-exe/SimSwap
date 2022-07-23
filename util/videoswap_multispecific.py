@@ -105,7 +105,7 @@ def video_swap(video_path, target_id_norm_list,source_specific_id_nonorm_list,id
                 for tmp_index, min_index in enumerate(min_indexs):
                     if min_value[tmp_index] < id_thres:
                         if new_model == True:
-                          swap_result = swap_result_new_model(frame_align_crop_tenor_list[tmp_index], target_id_norm_list[min_index], swap_model)
+                          swap_result = swap_result_new_model(frame_align_crop_tenor_list[tmp_index], swap_model, target_id_norm_list[min_index])
                         else:
                           swap_result = swap_model(None, frame_align_crop_tenor_list[tmp_index], target_id_norm_list[min_index], None, True)[0]
 
